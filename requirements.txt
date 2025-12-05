@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pdfplumber
+openai
+python-multipart
+rouge
+sentence-transformers
+torch
