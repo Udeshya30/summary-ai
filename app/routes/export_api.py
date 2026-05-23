@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Depends, Response
 from app.services.export_pdf import generate_pdf
 from app.services.export_excel import generate_excel
+from app.services.auth_service import current_user
 
 router = APIRouter()
 
 @router.post("/pdf")
-def export_pdf(data: dict):
+def export_pdf(data: dict, user=Depends(current_user)):
     pdf = generate_pdf(
         summary_text=data["summary"],
         findings=data.get("findings", []),
@@ -22,7 +23,7 @@ def export_pdf(data: dict):
 
 
 @router.post("/excel")
-def export_excel(data: dict):
+def export_excel(data: dict, user=Depends(current_user)):
     excel = generate_excel(
         summary=data["summary"],
         findings=data.get("findings", []),

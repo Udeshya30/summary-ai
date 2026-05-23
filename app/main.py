@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.database import init_db
+from app.routes.auth_api import router as auth_router
 from app.routes.summarize_api import router as summarize_router
 from app.routes.evaluate_api import router as evaluate_router
 from app.routes.export_api import router as export_router
+from app.routes.report_api import router as report_router
 
 app = FastAPI()
 
@@ -17,9 +20,16 @@ app.add_middleware(
 )
 
 # ========= ROUTES =========
+app.include_router(auth_router, prefix="/auth")
 app.include_router(summarize_router, prefix="/summary")
 app.include_router(evaluate_router, prefix="/evaluate")
 app.include_router(export_router, prefix="/export")
+app.include_router(report_router, prefix="/reports")
+
+
+@app.on_event("startup")
+def startup():
+    init_db()
 
 
 @app.get("/")
